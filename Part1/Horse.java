@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 /**
  * The class Horse is made up of multiple private attributes to ensure the use of encapsulation, the attributes defined in the horse method
@@ -30,6 +31,32 @@ public class Horse
         this.horseConfidence = horseConfidence;
         this.fallen = false;
         this.distance = 0;
+    }
+
+    // This method is used to tale an input from a user, a string in specific
+    public static String input (String output)
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(output);
+        String text = scanner.nextLine();
+        return text;
+    } // End of input
+    
+    // This method is used for printing out text
+    public static void print (String text)
+    {
+        System.out.println(text);
+        return;
+    } // End of print
+
+    public static void main(String[] args){
+        char horseSymbol = input("What is the symbol of the horse?").charAt(0); 
+        /*Scanner scanner = new Scanner(System.in);
+        print("What is the symbol of the horse?");
+        horseSymbol = scanner.next().charAt(0);*/
+        String horseName = input("What is the horses name?");
+        double horseConfidence = Double.valueOf(input("What is the confidence of the horse?"));
+        Horse H = new Horse(horseSymbol, horseName, horseConfidence);
     }
     
     
