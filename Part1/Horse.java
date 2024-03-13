@@ -1,9 +1,11 @@
 
 /**
- * Write a description of class Horse here.
+ * The class Horse is made up of multiple private attributes to ensure the use of encapsulation, the attributes defined in the horse method
+ * define the performance of the horse within a race, and the features of the horse such as symbol and name. All of these methods have public methods assgined to them to make any sort of changes to the values,
+ * as some attributes require conditions to be met for them to be inputted or used.
  * 
  * @author Ayaan Gauhar
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class Horse
 {
@@ -17,6 +19,10 @@ public class Horse
     //Constructor of class Horse
     /**
      * Constructor for objects of class Horse
+     * 
+     * @param horseSymbol This assigns the symbol choosen by the user to this object horse created
+     * @param horseName This assigns the name provided by the user to this instance of horse
+     * @param horseConfidence This instantiates the horseconfidence attrubute of the current instance of horseSS
      */
     public Horse(char horseSymbol, String horseName, double horseConfidence){
         this.horseName = horseName;
