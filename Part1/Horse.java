@@ -32,7 +32,7 @@ public class Horse
         this.fallen = false;
         this.distance = 0;
     }
-
+    
     // This method is used to tale an input from a user, a string in specific
     public static String input (String output)
     {
