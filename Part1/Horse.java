@@ -34,7 +34,8 @@ public class Horse
             this.horseConfidence = horseConfidence;
         }
         else{
-            System.out.println("Error, input was out of bounds");
+            print("Error, input was out of bounds");
+            input("Enter the horses confidence again, the bound is between 0 to 1");
         }
     }
 
