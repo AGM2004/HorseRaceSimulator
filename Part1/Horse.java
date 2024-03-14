@@ -6,7 +6,7 @@ import java.util.Scanner;
  * as some attributes require conditions to be met for them to be inputted or used.
  * 
  * @author Ayaan Gauhar
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class Horse
 {
@@ -28,9 +28,13 @@ public class Horse
     public Horse(char horseSymbol, String horseName, double horseConfidence){
         this.horseName = horseName;
         this.horseSymbol = horseSymbol;
-        this.horseConfidence = horseConfidence;
         this.fallen = false;
         this.distance = 0;
+        while (horseConfidence<0 || horseConfidence>1){
+            print("Error, input was out of bounds");
+            input("Enter the horses confidence again, the bound is between 0 to 1");
+        }
+        this.horseConfidence = horseConfidence;
     }
     
     // This method is used to tale an input from a user, a string in specific
@@ -51,9 +55,6 @@ public class Horse
 
     public static void main(String[] args){
         char horseSymbol = input("What is the symbol of the horse?").charAt(0); 
-        /*Scanner scanner = new Scanner(System.in);
-        print("What is the symbol of the horse?");
-        horseSymbol = scanner.next().charAt(0);*/
         String horseName = input("What is the horses name?");
         double horseConfidence = Double.valueOf(input("What is the confidence of the horse?"));
         Horse H = new Horse(horseSymbol, horseName, horseConfidence);
