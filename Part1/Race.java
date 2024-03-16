@@ -87,6 +87,18 @@ public class Race
             {
                 finished = true;
             }
+
+            if (finished == true){
+                if (raceWonBy(lane1Horse)){
+                    lane1Horse.print(lane1Horse.getName());
+                }
+                else if (raceWonBy(lane2Horse)){
+                    lane2Horse.print(lane2Horse.getName());
+                }
+                else{
+                    lane3Horse.print(lane3Horse.getName());
+                }
+            }
            
             //wait for 100 milliseconds
             try{ 
