@@ -37,7 +37,7 @@ public class Horse
     }
     
     // This method is used to tale an input from a user, a string in specific
-    public static String input (String output)
+    public String input (String output)
     {
         Scanner scanner = new Scanner(System.in);
         System.out.println(output);
@@ -46,7 +46,7 @@ public class Horse
     } // End of input
     
     // This method is used for printing out text
-    public static void print (String text)
+    public void print (String text)
     {
         System.out.println(text);
         return;
