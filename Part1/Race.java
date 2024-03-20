@@ -1,3 +1,4 @@
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
 
@@ -55,6 +56,22 @@ public class Race
             System.out.println("Cannot add horse to lane " + laneNumber + " because there is no such lane");
         }
     }
+
+    // This method is used to tale an input from a user, a string in specific
+    public String input (String output)
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(output);
+        String text = scanner.nextLine();
+        return text;
+    } // End of input
+    
+    // This method is used for printing out text
+    public void print (String text)
+    {
+        System.out.println(text);
+        return;
+    } // End of print
     
     /**
      * Start the race
