@@ -1,4 +1,3 @@
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
 
@@ -12,9 +11,8 @@ import java.lang.Math;
 public class Race
 {
     private int raceLength;
-    private Horse lane1Horse;
-    private Horse lane2Horse;
-    private Horse lane3Horse;
+    private Horse[] Horses;
+    private int contestents;
 
     /**
      * Constructor for objects of class Race
@@ -25,10 +23,9 @@ public class Race
     public Race(int distance)
     {
         // initialise instance variables
+        contestents = Integer.valueOf(input("How mnay contestants are running in the race?"));
+        Horses = new Horse[contestents];
         raceLength = distance;
-        lane1Horse = null;
-        lane2Horse = null;
-        lane3Horse = null;
     }
     
     /**
@@ -39,22 +36,8 @@ public class Race
      */
     public void addHorse(Horse theHorse, int laneNumber)
     {
-        if (laneNumber == 1)
-        {
-            lane1Horse = theHorse;
-        }
-        else if (laneNumber == 2)
-        {
-            lane2Horse = theHorse;
-        }
-        else if (laneNumber == 3)
-        {
-            lane3Horse = theHorse;
-        }
-        else
-        {
-            System.out.println("Cannot add horse to lane " + laneNumber + " because there is no such lane");
-        }
+        // Adding Horses to the array of horses
+        Horses[laneNumber-1] = theHorse;   
     }
 
     // This method is used to tale an input from a user, a string in specific
@@ -66,13 +49,6 @@ public class Race
         return text;
     } // End of input
     
-    // This method is used for printing out text
-    public void print (String text)
-    {
-        System.out.println(text);
-        return;
-    } // End of print
-    
     /**
      * Start the race
      * The horse are brought to the start and
@@ -81,47 +57,59 @@ public class Race
      */
     public void startRace()
     {
+        // declaring local variables that will be used to take an input from users
+        boolean add = true;
+        int lane= 1;
+        Horse H = null;
+
+        // Loop to take in details of horses to be added to the lanes
+        while(lane <= contestents){
+            char horseSymbol = input("What is the symbol of horse " + lane + " ?").charAt(0); 
+            String horseName = input("What is the name of horse " + lane + " ?");
+            double horseConfidence = Double.valueOf(input("What is the confidence of horse " + lane + " ?"));
+            H = new Horse(horseSymbol, horseName, horseConfidence);
+            addHorse(H,lane);
+            lane++;
+        }
+
         //declare a local variable to tell us when the race is finished
         boolean finished = false;
         
-        //reset all the lanes (all horses not fallen and back to 0). 
-        lane1Horse.goBackToStart();
-        lane2Horse.goBackToStart();
-        lane3Horse.goBackToStart();
-                      
+        //reset all the lanes (all horses not fallen and back to 0).
+        lane=0;
+        while(lane < contestents){
+            Horses[lane].goBackToStart();
+            lane++;
+        }
+
         while (!finished)
         {
             //move each horse
-            moveHorse(lane1Horse);
-            moveHorse(lane2Horse);
-            moveHorse(lane3Horse);
-                        
+            lane=0;
+            while(lane < contestents){
+                moveHorse(Horses[lane]);
+                lane++;
+            }
+
             //print the race positions
             printRace();
             
-            //if any of the three horses has won the race is finished
-            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) )
-            {
-                finished = true;
+            //if any of the horses has won the race is finished
+            lane=0;
+            while(lane < contestents){
+                if(raceWonBy(Horses[lane])){
+                    Horses[lane].print(Horses[lane].getName() + " has won the race !");
+                    finished = true;
+                }
+                lane++;
             }
 
-            if (finished == true){
-                if (raceWonBy(lane1Horse)){
-                    lane1Horse.print(lane1Horse.getName());
-                }
-                else if (raceWonBy(lane2Horse)){
-                    lane2Horse.print(lane2Horse.getName());
-                }
-                else{
-                    lane3Horse.print(lane3Horse.getName());
-                }
-            }
-           
             //wait for 100 milliseconds
             try{ 
                 TimeUnit.MILLISECONDS.sleep(100);
             }catch(Exception e){}
         }
+        
     }
     
     /**
@@ -182,14 +170,12 @@ public class Race
         multiplePrint('=',raceLength+3); //top edge of track
         System.out.println();
         
-        printLane(lane1Horse);
-        System.out.println();
-        
-        printLane(lane2Horse);
-        System.out.println();
-        
-        printLane(lane3Horse);
-        System.out.println();
+        int lane = 0;
+        while(lane<contestents){
+            printLane(Horses[lane]);
+            System.out.println();
+            lane++;
+        }
         
         multiplePrint('=',raceLength+3); //bottom edge of track
         System.out.println();    
@@ -220,7 +206,7 @@ public class Race
         {
             System.out.print('\u2322');
         }
-        else
+        else 
         {
             System.out.print(theHorse.getSymbol());
         }
