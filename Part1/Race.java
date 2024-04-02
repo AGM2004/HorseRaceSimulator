@@ -23,7 +23,8 @@ public class Race
     public Race(int distance)
     {
         // initialise instance variables
-        contestents = Integer.valueOf(input("How mnay contestants are running in the race?"));
+        contestents = Integer.valueOf(input("How many contestants are running in the race?"));
+        System.out.println("\n");
         Horses = new Horse[contestents];
         raceLength = distance;
     }
@@ -70,6 +71,7 @@ public class Race
             H = new Horse(horseSymbol, horseName, horseConfidence);
             addHorse(H,lane);
             lane++;
+            System.out.println("\n");
         }
 
         //declare a local variable to tell us when the race is finished
@@ -216,6 +218,9 @@ public class Race
         
         //print the | for the end of the track
         System.out.print('|');
+
+        // Printing the Details of the contestant
+        System.out.print("  " + theHorse.getName().toUpperCase() + " (Current confidence " + theHorse.getConfidence() + ")");
     }
         
     
