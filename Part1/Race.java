@@ -20,13 +20,14 @@ public class Race
      * 
      * @param distance the length of the racetrack (in metres/yards...)
      */
-    public Race(int distance)
+    public Race (int distance)
     {
         // initialise instance variables
         contestents = Integer.valueOf(input("How many contestants are running in the race?"));
         System.out.println("\n");
         Horses = new Horse[contestents];
         raceLength = distance;
+        startRace();
     }
     
     /**
@@ -62,6 +63,8 @@ public class Race
         boolean add = true;
         int lane= 1;
         Horse H = null;
+        boolean start = true;
+        int race = 1;
 
         // Loop to take in details of horses to be added to the lanes
         while(lane <= contestents){
@@ -73,43 +76,81 @@ public class Race
             lane++;
             System.out.println("\n");
         }
-
-        //declare a local variable to tell us when the race is finished
-        boolean finished = false;
         
-        //reset all the lanes (all horses not fallen and back to 0).
-        lane=0;
-        while(lane < contestents){
-            Horses[lane].goBackToStart();
-            lane++;
-        }
+        while (start){
+            System.out.println("Race number: " + race + "\n");
 
-        while (!finished)
-        {
-            //move each horse
+            //declare a local variable to tell us when the race is finished
+            boolean finished = false;
+        
+            //reset all the lanes (all horses not fallen and back to 0).
             lane=0;
             while(lane < contestents){
-                moveHorse(Horses[lane]);
+                Horses[lane].goBackToStart();
                 lane++;
             }
 
-            //print the race positions
-            printRace();
-            
-            //if any of the horses has won the race is finished
-            lane=0;
-            while(lane < contestents){
-                if(raceWonBy(Horses[lane])){
-                    Horses[lane].print(Horses[lane].getName() + " has won the race !");
+            while (!finished)
+            {
+                //move each horse
+                lane=0;
+                while(lane < contestents){
+                    moveHorse(Horses[lane]);
+                    lane++;
+                }
+
+                //print the race positions
+                printRace();
+
+                boolean allfallen = false;
+                for(int i =0; i<Horses.length; i++){
+                    if(Horses[i].hasFallen() == true){
+                        allfallen = true;
+                    }
+                    else {
+                        allfallen = false;
+                        break;
+                    }
+                }
+
+                if(allfallen == false){
+                    //if any of the horses has won the race is finished
+                    int winners = 1;
+                    String winnernames = "";
+                    lane=0;
+                    while(lane < contestents){
+                        if(raceWonBy(Horses[lane])){
+                            winnernames += Horses[lane].getName() + " ";
+                            winners++;
+                        }
+                        lane++;
+                    }
+                    if (winners == 1){
+                        System.out.println(winnernames + "has won the race!! ");
+                    }
+                    else {
+                        System.out.println("The race was a tie between " + winnernames);
+                    }
                     finished = true;
                 }
-                lane++;
+
+                else {
+                    System.out.println("All horses have fallen race has ended!! :( ");
+                    finished = true;
+                }
+
+                //wait for 100 milliseconds
+                try{ 
+                    TimeUnit.MILLISECONDS.sleep(100);
+                }catch(Exception e){}
+
             }
 
-            //wait for 100 milliseconds
-            try{ 
-                TimeUnit.MILLISECONDS.sleep(100);
-            }catch(Exception e){}
+            // Option to restart the race
+            if(input("\n" + "Retart? (y/n)").toLowerCase().equals("n")){
+                start = false;
+            }
+            race++;
         }
         
     }
