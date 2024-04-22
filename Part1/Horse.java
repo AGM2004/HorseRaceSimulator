@@ -58,6 +58,9 @@ public class Horse
         this.fallen = true;
     }
 
+    public void stand(){
+        this.fallen = false;
+    }
     public void goBackToStart(){
         this.distance = 0;
     }
@@ -82,7 +85,7 @@ public class Horse
     public double getConfidence(){
         return this.horseConfidence;
     }
-
+    
     public int getDistanceTravelled(){
         return this.distance;
     }

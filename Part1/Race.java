@@ -87,6 +87,7 @@ public class Race
             lane=0;
             while(lane < contestents){
                 Horses[lane].goBackToStart();
+                Horses[lane].stand();
                 lane++;
             }
 
@@ -115,23 +116,25 @@ public class Race
 
                 if(allfallen == false){
                     //if any of the horses has won the race is finished
-                    int winners = 1;
+                    int winners = 0;
                     String winnernames = "";
-                    lane=0;
-                    while(lane < contestents){
-                        if(raceWonBy(Horses[lane])){
-                            winnernames += Horses[lane].getName() + " ";
+                    boolean won = false;
+                    for(int i =0; i < contestents; i++){
+                        if(raceWonBy(Horses[i])){
+                            winnernames += Horses[i].getName() + " ";
                             winners++;
+                            won = true;
                         }
-                        lane++;
                     }
-                    if (winners == 1){
+
+                    if (winners == 1 && won == true){
                         System.out.println(winnernames + "has won the race!! ");
+                        finished = true;
                     }
-                    else {
+                    else if (won == true && winners>1){
                         System.out.println("The race was a tie between " + winnernames);
+                        finished = true;
                     }
-                    finished = true;
                 }
 
                 else {
@@ -140,7 +143,8 @@ public class Race
                 }
 
                 //wait for 100 milliseconds
-                try{ 
+                try{
+                    System.out.print('\u000C');  //clear the terminal window
                     TimeUnit.MILLISECONDS.sleep(100);
                 }catch(Exception e){}
 
@@ -180,6 +184,7 @@ public class Race
             //so if you double the confidence, the probability that it will fall is *2
             if (Math.random() < (0.1*theHorse.getConfidence()*theHorse.getConfidence()))
             {
+                theHorse.setConfidence(theHorse.getConfidence() - 0.1);
                 theHorse.fall();
             }
         }
@@ -195,6 +200,7 @@ public class Race
     {
         if (theHorse.getDistanceTravelled() == raceLength)
         {
+            theHorse.setConfidence(theHorse.getConfidence() + 0.1);
             return true;
         }
         else
@@ -247,7 +253,7 @@ public class Race
         //else print the horse's symbol
         if(theHorse.hasFallen())
         {
-            System.out.print('\u2322');
+            System.out.print('\u274c');
         }
         else 
         {
