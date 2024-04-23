@@ -1,5 +1,6 @@
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
+import java.util.Scanner;
 
 /**
  * A three-horse race, each horse running in its own lane
@@ -13,6 +14,12 @@ public class Race
     private int raceLength;
     private Horse[] Horses;
     private int contestents;
+    private String trackboundaries;
+    private String trackedge;
+
+    public static void main(String args[]){
+        new Race();
+    }
 
     /**
      * Constructor for objects of class Race
@@ -20,13 +27,14 @@ public class Race
      * 
      * @param distance the length of the racetrack (in metres/yards...)
      */
-    public Race (int distance)
+    public Race()
     {
         // initialise instance variables
-        contestents = Integer.valueOf(input("How many contestants are running in the race?"));
-        System.out.println("\n");
+        contestents = Integer.valueOf(input("\n"+ "How many contestants are running in the race?"));
         Horses = new Horse[contestents];
-        raceLength = distance;
+        raceLength = Integer.valueOf(input("\n"+ "What is the distance of the track?"));
+        trackboundaries = input("\n"+ "What symbol do you want to represent the top of the track?");
+        trackedge = input("\n"+ "What symbol do you want to represent the edge of the track?");
         startRace();
     }
     
@@ -78,7 +86,7 @@ public class Race
         }
         
         while (start){
-            System.out.println("Race number: " + race + "\n");
+            System.out.println("\n" + "Race number: " + race + "\n");
 
             //declare a local variable to tell us when the race is finished
             boolean finished = false;
@@ -144,14 +152,15 @@ public class Race
 
                 //wait for 100 milliseconds
                 try{
-                    System.out.print('\u000C');  //clear the terminal window
+                    //System.out.println("\033[H\033[2J");
+                    //System.out.print('\u000C');  //clear the terminal window
                     TimeUnit.MILLISECONDS.sleep(100);
                 }catch(Exception e){}
 
             }
 
             // Option to restart the race
-            if(input("\n" + "Retart? (y/n)").toLowerCase().equals("n")){
+            if(input("\n" + "------- Retart? (y/n) -------").toLowerCase().equals("n")){
                 start = false;
             }
             race++;
@@ -216,7 +225,7 @@ public class Race
     {
         System.out.print('\u000C');  //clear the terminal window
         
-        multiplePrint('=',raceLength+3); //top edge of track
+        multiplePrint(trackboundaries.charAt(0),raceLength+3); //top edge of track
         System.out.println();
         
         int lane = 0;
@@ -226,7 +235,7 @@ public class Race
             lane++;
         }
         
-        multiplePrint('=',raceLength+3); //bottom edge of track
+        multiplePrint(trackboundaries.charAt(0),raceLength+3); //bottom edge of track
         System.out.println();    
     }
     
@@ -243,8 +252,8 @@ public class Race
         int spacesBefore = theHorse.getDistanceTravelled();
         int spacesAfter = raceLength - theHorse.getDistanceTravelled();
         
-        //print a | for the beginning of the lane
-        System.out.print('|');
+        //print a custom symbol for the beginning of the lane
+        System.out.print(trackedge.charAt(0));
         
         //print the spaces before the horse
         multiplePrint(' ',spacesBefore);
@@ -263,8 +272,8 @@ public class Race
         //print the spaces after the horse
         multiplePrint(' ',spacesAfter);
         
-        //print the | for the end of the track
-        System.out.print('|');
+        //print the custom symbol for the end of the track
+        System.out.print(trackedge.charAt(0));
 
         // Printing the Details of the contestant
         System.out.print("  " + theHorse.getName().toUpperCase() + " (Current confidence " + theHorse.getConfidence() + ")");

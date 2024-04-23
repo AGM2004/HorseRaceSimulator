@@ -1,5 +1,6 @@
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
+import java.util.Scanner;
 
 /**
  * A three-horse race, each horse running in its own lane
@@ -14,13 +15,17 @@ public class Race
     private Horse[] Horses;
     private int contestents;
 
+    public static void main(String args[]){
+        new Race(5);
+    }
+
     /**
      * Constructor for objects of class Race
      * Initially there are no horses in the lanes
      * 
      * @param distance the length of the racetrack (in metres/yards...)
      */
-    public Race (int distance)
+    public Race(int distance)
     {
         // initialise instance variables
         contestents = Integer.valueOf(input("How many contestants are running in the race?"));
@@ -78,7 +83,7 @@ public class Race
         }
         
         while (start){
-            System.out.println("Race number: " + race + "\n");
+            System.out.println("\n" + "Race number: " + race + "\n");
 
             //declare a local variable to tell us when the race is finished
             boolean finished = false;
@@ -144,14 +149,15 @@ public class Race
 
                 //wait for 100 milliseconds
                 try{
-                    System.out.print('\u000C');  //clear the terminal window
+                    //System.out.println("\033[H\033[2J");
+                    //System.out.print('\u000C');  //clear the terminal window
                     TimeUnit.MILLISECONDS.sleep(100);
                 }catch(Exception e){}
 
             }
 
             // Option to restart the race
-            if(input("\n" + "Retart? (y/n)").toLowerCase().equals("n")){
+            if(input("\n" + "------- Retart? (y/n) -------").toLowerCase().equals("n")){
                 start = false;
             }
             race++;
