@@ -1,12 +1,11 @@
 import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.util.Stack;
 
 
 /**
@@ -23,13 +22,16 @@ public class Race
     private static int contestents;
     private static String trackboundaries;
     private static String trackedge;
-    private static int currentRace;
+    private static int currentRace = 0;
+    private static String races = "";
+    private static String message = "";
     public static void main(String args[]){
         //new Race();
         
         JFrame frame = new JFrame("Details");
         frame.setLayout(new FlowLayout());
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setSize(750, 170);;
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
         JPanel panel1 = new JPanel(new GridLayout(4,2));
@@ -121,32 +123,41 @@ public class Race
                                 Horse H = null;
                                 boolean end = false;
                                 for(int lane = 0; lane<contestents; lane++){
-                                    char horseSymbol = S[lane].getText().charAt(0); 
-                                    String horseName = N[lane].getText();
-                                    double horseConfidence = Double.valueOf(C[lane].getText());
-                                    if(horseConfidence > 0 && horseConfidence < 1){
-                                        H = new Horse(horseSymbol, horseName, horseConfidence);
-                                        end = true;
+                                    for(int concheck = 0 ; concheck<contestents; concheck++){
+                                        if(Double.valueOf(C[lane].getText()) > 0 && Double.valueOf(C[lane].getText()) < 1){
+                                            end = true;
+                                        }
+                                        else{
+                                            end = false;
+                                            break;
+                                        }
                                     }
-                                    else{
-                                        end = false;
-                                        break;
-                                    }
+                                    
                                 }
                                 if(end == true){
+                                    Horses = new Horse[contestents];
+                                    for(int lane=0; lane<contestents;lane++){
+                                        char horseSymbol = S[lane].getText().charAt(0); 
+                                        String horseName = N[lane].getText();
+                                        double horseConfidence = Double.valueOf(C[lane].getText());
+                                        H = new Horse(horseSymbol, horseName, horseConfidence);
+                                        addHorse(H,lane);
+                                    }
+
                                     ftemp.setVisible(false);
 
                                     JFrame Race = new JFrame("Horse Race");
-                                    Race.setLayout(new FlowLayout());
+                                    Race.setLayout(new BorderLayout());
                                     Race.setExtendedState(JFrame.MAXIMIZED_BOTH);
                                     Race.setVisible(true);
 
-                                    JPanel PRace = new JPanel(new BorderLayout());
+                                    JPanel Details = new JPanel(new BorderLayout());
                                     JPanel Options = new JPanel(new GridLayout(1,3));
 
                                     JButton Stats = new JButton("Statistics");
                                     JButton Customise = new JButton("Customise");
                                     JButton Bets = new JButton("Bets");
+                                    JButton start = new JButton("Start");
 
                                     JLabel currentrace = new JLabel();
 
@@ -154,13 +165,93 @@ public class Race
                                     Options.add(Customise);
                                     Options.add(Bets);
 
-                                    JTextArea Raceprint = new JTextArea(200, 400);
+                                    JTextArea completerace = new JTextArea();
+                                    JLabel winners = new JLabel();
 
+                                    start.addActionListener(new ActionListener() {
+                                        public void actionPerformed(ActionEvent e){
+                                            //declare a local variable to tell us when the race is finished
+                                            boolean finished = false;
+        
+                                            //reset all the lanes (all horses not fallen and back to 0).
+                                            int lane=0;
+                                            while(lane < contestents){
+                                                Horses[lane].goBackToStart();
+                                                Horses[lane].stand();
+                                                lane++;
+                                            }
+                                            
+                                            while(!finished){
+                                                //move each horse
+                                                lane=0;
+                                                while(lane < contestents){
+                                                    moveHorse(Horses[lane]);
+                                                    lane++;
+                                                }
 
+                                                //print the race positions
+                                                races += printRace() + "\n";
 
+                                                boolean allfallen = false;
+                                                for(int i =0; i<Horses.length; i++){
+                                                    if(Horses[i].hasFallen() == true){
+                                                        allfallen = true;
+                                                    }
+                                                    else {
+                                                        allfallen = false;
+                                                        break;
+                                                    }
+                                                }
 
-                                    PRace.add(Raceprint, BorderLayout.CENTER);
-                                    PRace.add(Options, BorderLayout.SOUTH);
+                                                if(allfallen == false){
+                                                    //if any of the horses has won the race is finished
+                                                    int winners = 0;
+                                                    String winnernames = "";
+                                                    boolean won = false;
+                                                    for(int i =0; i < contestents; i++){
+                                                        if(raceWonBy(Horses[i])){
+                                                            winnernames += Horses[i].getName() + " ";
+                                                            winners++;
+                                                            won = true;
+                                                        }
+                                                    }
+
+                                                    if (winners == 1 && won == true){
+                                                        message += winnernames + "has won the race!! ";
+                                                        finished = true;
+                                                    }
+                                                    else if (won == true && winners>1){
+                                                        message += "The race was a tie between " + winnernames;
+                                                        finished = true;
+                                                    }
+                                                }
+
+                                                else {
+                                                    message += "All horses have fallen race has ended!! :( ";
+                                                    finished = true;
+                                                }
+                                            }
+
+                                            completerace.setText(races);
+                                            winners.setText(message);
+                                            winners.setHorizontalAlignment(SwingConstants.CENTER);
+                                            races = "";
+                                            message = "";
+                                            currentRace++;
+                                            currentrace.setText("Race Number is: " + String.valueOf(currentRace));
+                                        }
+                                    });
+
+                                    JScrollPane Raceprint = new JScrollPane(completerace);
+
+                                    Details.add(currentrace, BorderLayout.WEST);
+                                    Details.add(winners,BorderLayout.CENTER);
+                                    Details.add(start, BorderLayout.EAST);
+
+                                    Race.add(Details, BorderLayout.NORTH);
+                                    Race.add(Raceprint, BorderLayout.CENTER);
+                                    Race.add(Options, BorderLayout.SOUTH);
+
                                 }
                             }
                         });
@@ -205,10 +296,10 @@ public class Race
      * @param theHorse the horse to be added to the race
      * @param laneNumber the lane that the horse will be added to
      */
-    public void addHorse(Horse theHorse, int laneNumber)
+    public static void addHorse(Horse theHorse, int laneNumber)
     {
         // Adding Horses to the array of horses
-        Horses[laneNumber-1] = theHorse;   
+        Horses[laneNumber] = theHorse;   
     }
 
     // This method is used to tale an input from a user, a string in specific
@@ -336,7 +427,7 @@ public class Race
      * 
      * @param theHorse the horse to be moved
      */
-    private void moveHorse(Horse theHorse)
+    private static void moveHorse(Horse theHorse)
     {
         //if the horse has fallen it cannot move, 
         //so only run if it has not fallen
@@ -366,7 +457,7 @@ public class Race
      * @param theHorse The horse we are testing
      * @return true if the horse has won, false otherwise.
      */
-    private boolean raceWonBy(Horse theHorse)
+    private static boolean raceWonBy(Horse theHorse)
     {
         if (theHorse.getDistanceTravelled() == raceLength)
         {
@@ -382,22 +473,19 @@ public class Race
     /***
      * Print the race on the terminal
      */
-    private void printRace()
+    private static String printRace()
     {
-        System.out.print('\u000C');  //clear the terminal window
-        
-        multiplePrint(trackboundaries.charAt(0),raceLength+3); //top edge of track
-        System.out.println();
+        String race = "";
+        race += multiplePrint(trackboundaries.charAt(0),raceLength+3) + "\n"; //top edge of track
         
         int lane = 0;
         while(lane<contestents){
-            printLane(Horses[lane]);
-            System.out.println();
+            race += printLane(Horses[lane]) + "\n";
             lane++;
         }
         
-        multiplePrint(trackboundaries.charAt(0),raceLength+3); //bottom edge of track
-        System.out.println();    
+        race += multiplePrint(trackboundaries.charAt(0),raceLength+3); //bottom edge of track
+        return race;    
     }
     
     /**
@@ -406,38 +494,42 @@ public class Race
      * |           X                      |
      * to show how far the horse has run
      */
-    private void printLane(Horse theHorse)
+    private static String printLane(Horse theHorse)
     {
         //calculate how many spaces are needed before
         //and after the horse
         int spacesBefore = theHorse.getDistanceTravelled();
         int spacesAfter = raceLength - theHorse.getDistanceTravelled();
+
+        String lane = "";
         
         //print a custom symbol for the beginning of the lane
-        System.out.print(trackedge.charAt(0));
+        lane += trackedge.charAt(0);
         
         //print the spaces before the horse
-        multiplePrint(' ',spacesBefore);
+        lane += multiplePrint(' ',spacesBefore);
         
         //if the horse has fallen then print dead
         //else print the horse's symbol
         if(theHorse.hasFallen())
         {
-            System.out.print('\u274c');
+            lane += '\u274c';
         }
         else 
         {
-            System.out.print(theHorse.getSymbol());
+            lane += theHorse.getSymbol();
         }
         
         //print the spaces after the horse
-        multiplePrint(' ',spacesAfter);
+        lane += multiplePrint(' ',spacesAfter);
         
         //print the custom symbol for the end of the track
-        System.out.print(trackedge.charAt(0));
+        lane += trackedge.charAt(0);
 
         // Printing the Details of the contestant
-        System.out.print("  " + theHorse.getName().toUpperCase() + " (Current confidence " + theHorse.getConfidence() + ")");
+        lane += "  " + theHorse.getName().toUpperCase() + " (Current confidence " + theHorse.getConfidence() + ")";
+
+        return lane;
     }
         
     
@@ -447,13 +539,13 @@ public class Race
      * 
      * @param aChar the character to Print
      */
-    private void multiplePrint(char aChar, int times)
+    private static String multiplePrint(char aChar, int times)
     {
-        int i = 0;
-        while (i < times)
-        {
-            System.out.print(aChar);
-            i = i + 1;
+        String mul = "";
+        for(int i =0; i<times; i++){
+            mul += aChar;
         }
+        int i = 0;
+        return mul;
     }
 }
