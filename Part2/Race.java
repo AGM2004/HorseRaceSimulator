@@ -1,6 +1,13 @@
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
 import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.Stack;
+
 
 /**
  * A three-horse race, each horse running in its own lane
@@ -11,14 +18,159 @@ import java.util.Scanner;
  */
 public class Race
 {
-    private int raceLength;
-    private Horse[] Horses;
-    private int contestents;
-    private String trackboundaries;
-    private String trackedge;
-
+    private static int raceLength;
+    private static Horse[] Horses;
+    private static int contestents;
+    private static String trackboundaries;
+    private static String trackedge;
+    private static int currentRace;
     public static void main(String args[]){
-        new Race();
+        //new Race();
+        
+        JFrame frame = new JFrame("Details");
+        frame.setLayout(new FlowLayout());
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setVisible(true);
+
+        JPanel panel1 = new JPanel(new GridLayout(4,2));
+
+        JLabel l1 = new JLabel("How many horses do you have?");
+        panel1.add(l1);
+        JTextField t1 = new JTextField(10);
+        panel1.add(t1);
+
+        JLabel l2 = new JLabel("Whats the length of the track?");
+        panel1.add(l2);
+        JTextField t2 = new JTextField(10);
+        panel1.add(t2);
+
+        JLabel l3 = new JLabel("What symbol do you want to represent the top of the track?");
+        panel1.add(l3);
+        JTextField t3 = new JTextField(10);
+        panel1.add(t3);
+
+        JLabel l4 = new JLabel("What symbol do you want to represent the edge of the track?");
+        panel1.add(l4);
+        JTextField t4 = new JTextField(10);
+        panel1.add(t4);
+
+        panel1.setLocation(200, 10);
+
+        frame.add(panel1);
+
+        JPanel panel2 = new JPanel(new FlowLayout());
+
+        JButton done = new JButton("Done");
+        done.setLocation(20,80);
+        panel2.add(done);
+        frame.add(panel2);
+        try{
+            done.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e){
+                    int check1 = Integer.valueOf(t1.getText());
+                    int check2 = Integer.valueOf(t2.getText());
+
+                    if(check1 > 0 && check2 > 0){
+                        contestents = check1;
+                        raceLength = check2;
+                        trackboundaries = t3.getText();
+                        trackedge = t4.getText();
+
+                        frame.setVisible(false);
+
+                        // Taking inputs of horses
+
+                        JFrame ftemp = new JFrame("Horse Details");
+                        ftemp.setLayout(new FlowLayout());
+                        ftemp.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                        ftemp.setVisible(true);
+
+                        JPanel panelinputs = new JPanel(new GridLayout(contestents,2));
+                        JPanel panelbutton = new JPanel(new FlowLayout());
+
+                        JTextField[] N = new JTextField[contestents];
+                        JTextField[] S = new JTextField[contestents];
+                        JTextField[] C = new JTextField[contestents];
+
+                        for(int i = 0; i<contestents; i++){
+                            N[i] = new JTextField(10);
+                            S[i] = new JTextField(10);
+                            C[i] = new JTextField(10);
+
+                            int lane = i + 1;
+                            JLabel name = new JLabel("What is the name of horse " + lane + " ?");
+                            JLabel symbol = new JLabel("What is the symbol of horse " + lane + " ?");
+                            JLabel confidence = new JLabel("What is the confidence of horse " + lane + " ?");
+
+                            panelinputs.add(name);
+                            panelinputs.add(N[i]);
+                            panelinputs.add(symbol);
+                            panelinputs.add(S[i]);
+                            panelinputs.add(confidence);
+                            panelinputs.add(C[i]);
+                        }
+
+                        JButton add = new JButton("Add");
+                        panelbutton.add(add);
+
+                        ftemp.add(panelinputs);
+                        ftemp.add(panelbutton);
+
+                        add.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e3){
+                                Horse H = null;
+                                boolean end = false;
+                                for(int lane = 0; lane<contestents; lane++){
+                                    char horseSymbol = S[lane].getText().charAt(0); 
+                                    String horseName = N[lane].getText();
+                                    double horseConfidence = Double.valueOf(C[lane].getText());
+                                    if(horseConfidence > 0 && horseConfidence < 1){
+                                        H = new Horse(horseSymbol, horseName, horseConfidence);
+                                        end = true;
+                                    }
+                                    else{
+                                        end = false;
+                                        break;
+                                    }
+                                }
+                                if(end == true){
+                                    ftemp.setVisible(false);
+
+                                    JFrame Race = new JFrame("Horse Race");
+                                    Race.setLayout(new FlowLayout());
+                                    Race.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                                    Race.setVisible(true);
+
+                                    JPanel PRace = new JPanel(new BorderLayout());
+                                    JPanel Options = new JPanel(new GridLayout(1,3));
+
+                                    JButton Stats = new JButton("Statistics");
+                                    JButton Customise = new JButton("Customise");
+                                    JButton Bets = new JButton("Bets");
+
+                                    JLabel currentrace = new JLabel();
+
+                                    Options.add(Stats);
+                                    Options.add(Customise);
+                                    Options.add(Bets);
+
+                                    JTextArea Raceprint = new JTextArea(200, 400);
+
+
+
+
+                                    PRace.add(Raceprint, BorderLayout.CENTER);
+                                    PRace.add(Options, BorderLayout.SOUTH);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        } catch (Exception e4){
+            System.out.println("Error has occured");
+        }
+        
     }
 
     /**
@@ -29,10 +181,19 @@ public class Race
      */
     public Race()
     {
+        
         // initialise instance variables
-        contestents = Integer.valueOf(input("\n"+ "How many contestants are running in the race?"));
+        int number = 0;
+        while (number <= 0){
+            number = Integer.valueOf(input("\n"+ "How many contestants are running in the race?"));
+        }
+        int length = 0;
+        while (length <= 0){
+            length = Integer.valueOf(input("\n"+ "What is the distance of the track?"));
+        }
+        contestents = number;
         Horses = new Horse[contestents];
-        raceLength = Integer.valueOf(input("\n"+ "What is the distance of the track?"));
+        raceLength = length;
         trackboundaries = input("\n"+ "What symbol do you want to represent the top of the track?");
         trackedge = input("\n"+ "What symbol do you want to represent the edge of the track?");
         startRace();
