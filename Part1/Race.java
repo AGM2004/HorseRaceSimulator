@@ -84,7 +84,6 @@ public class Race
             lane++;
             System.out.println("\n");
         }
-        
 
         while (start){
             System.out.println("\n" + "Race number: " + race + "\n");
