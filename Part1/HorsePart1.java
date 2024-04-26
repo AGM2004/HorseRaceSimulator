@@ -8,7 +8,7 @@ import java.util.Scanner;
  * @author Ayaan Gauhar
  * @version 1.0.2
  */
-public class Horse
+public class HorsePart1
 {
     //Fields of class Horse
     private String horseName;
@@ -25,7 +25,7 @@ public class Horse
      * @param horseName This assigns the name provided by the user to this instance of horse
      * @param horseConfidence This instantiates the horseconfidence attrubute of the current instance of horseSS
      */
-    public Horse(char horseSymbol, String horseName, double horseConfidence){
+    public HorsePart1(char horseSymbol, String horseName, double horseConfidence){
         this.horseName = horseName;
         this.horseSymbol = horseSymbol;
         this.fallen = false;

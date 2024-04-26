@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Race
 {
     private int raceLength;
-    private Horse[] Horses;
+    private HorsePart1[] Horses;
     private int contestents;
 
     public static void main(String args[]){
@@ -30,7 +30,7 @@ public class Race
         // initialise instance variables
         contestents = Integer.valueOf(input("How many contestants are running in the race?"));
         System.out.println("\n");
-        Horses = new Horse[contestents];
+        Horses = new HorsePart1[contestents];
         raceLength = distance;
         startRace();
     }
@@ -41,7 +41,7 @@ public class Race
      * @param theHorse the horse to be added to the race
      * @param laneNumber the lane that the horse will be added to
      */
-    public void addHorse(Horse theHorse, int laneNumber)
+    public void addHorse(HorsePart1 theHorse, int laneNumber)
     {
         // Adding Horses to the array of horses
         Horses[laneNumber-1] = theHorse;   
@@ -62,31 +62,29 @@ public class Race
      * then repeatedly moved forward until the 
      * race is finished
      */
-    public void startRace()
+    public synchronized void startRace()
     {
         // declaring local variables that will be used to take an input from users
         boolean add = true;
         int lane= 1;
-        Horse H = null;
+        HorsePart1 H = null;
         boolean start = true;
         int race = 1;
 
         // Loop to take in details of horses to be added to the lanes
         while(lane <= contestents){
-            char horseSymbol = input("What is the symbol of horse " + lane + " ?").charAt(0); 
             String horseName = input("What is the name of horse " + lane + " ?");
+            char horseSymbol = input("What is the symbol of horse " + lane + " ?").charAt(0); 
             double horseConfidence = Double.valueOf(input("What is the confidence of horse " + lane + " ?"));
-            H = new Horse(horseSymbol, horseName, horseConfidence);
+            H = new HorsePart1(horseSymbol, horseName, horseConfidence);
             addHorse(H,lane);
             lane++;
             System.out.println("\n");
         }
         
+
         while (start){
             System.out.println("\n" + "Race number: " + race + "\n");
-
-            //declare a local variable to tell us when the race is finished
-            boolean finished = false;
         
             //reset all the lanes (all horses not fallen and back to 0).
             lane=0;
@@ -96,13 +94,15 @@ public class Race
                 lane++;
             }
 
-            while (!finished)
-            {
+            //declare a local variable to tell us when the race is finished
+            boolean finished = false;
+
+            while (!finished){
                 //move each horse
-                lane=0;
-                while(lane < contestents){
-                    moveHorse(Horses[lane]);
-                    lane++;
+                int lane2=0;
+                while(lane2 < contestents){
+                    moveHorse(Horses[lane2]);
+                    lane2++;
                 }
 
                 //print the race positions
@@ -172,7 +172,7 @@ public class Race
      * 
      * @param theHorse the horse to be moved
      */
-    private void moveHorse(Horse theHorse)
+    private void moveHorse(HorsePart1 theHorse)
     {
         //if the horse has fallen it cannot move, 
         //so only run if it has not fallen
@@ -202,7 +202,7 @@ public class Race
      * @param theHorse The horse we are testing
      * @return true if the horse has won, false otherwise.
      */
-    private boolean raceWonBy(Horse theHorse)
+    private boolean raceWonBy(HorsePart1 theHorse)
     {
         if (theHorse.getDistanceTravelled() == raceLength)
         {
@@ -242,7 +242,7 @@ public class Race
      * |           X                      |
      * to show how far the horse has run
      */
-    private void printLane(Horse theHorse)
+    private void printLane(HorsePart1 theHorse)
     {
         //calculate how many spaces are needed before
         //and after the horse
