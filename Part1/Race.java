@@ -17,7 +17,11 @@ public class Race
     private int contestents;
 
     public static void main(String args[]){
-        new Race();
+        try{
+            new Race();
+        } catch (Exception e){
+            System.out.println("Error has occured!!");
+        }
     }
 
     /**
