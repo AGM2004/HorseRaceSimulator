@@ -1,5 +1,6 @@
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -11,12 +12,12 @@ import java.util.Scanner;
  */
 public class Race
 {
-    private int raceLength;
+    private int raceLength = 0;
     private HorsePart1[] Horses;
     private int contestents;
 
-    public static void main(String args[]){
-        new Race(5);
+    public void main(String args[]){
+        new Race();
     }
 
     /**
@@ -25,13 +26,15 @@ public class Race
      * 
      * @param distance the length of the racetrack (in metres/yards...)
      */
-    public Race(int distance)
+    public Race()
     {
         // initialise instance variables
         contestents = Integer.valueOf(input("How many contestants are running in the race?"));
         System.out.println("\n");
         Horses = new HorsePart1[contestents];
-        raceLength = distance;
+        while(raceLength <= 0){
+            raceLength = Integer.valueOf(input("What is the length of the race?"));
+        }
         startRace();
     }
     
@@ -65,18 +68,19 @@ public class Race
     public synchronized void startRace()
     {
         // declaring local variables that will be used to take an input from users
-        boolean add = true;
         int lane= 1;
         HorsePart1 H = null;
         boolean start = true;
         int race = 1;
+        Random rd = new Random();
 
         // Loop to take in details of horses to be added to the lanes
         while(lane <= contestents){
             String horseName = input("What is the name of horse " + lane + " ?");
             char horseSymbol = input("What is the symbol of horse " + lane + " ?").charAt(0); 
-            double horseConfidence = Double.valueOf(input("What is the confidence of horse " + lane + " ?"));
-            H = new HorsePart1(horseSymbol, horseName, horseConfidence);
+            double horsec = Double.valueOf(rd.nextInt(9) +1)/10.0;
+            System.out.println("What is the confidence of horse " + horsec); 
+            H = new HorsePart1(horseSymbol, horseName, horsec);
             addHorse(H,lane);
             lane++;
             System.out.println("\n");
@@ -108,6 +112,7 @@ public class Race
                 //print the race positions
                 printRace();
 
+                // Checking if all horses have fallen or not to either continue or end the race
                 boolean allfallen = false;
                 for(int i =0; i<Horses.length; i++){
                     if(Horses[i].hasFallen() == true){
@@ -132,6 +137,7 @@ public class Race
                         }
                     }
 
+                    // Printing winners names acording to the amount of winners
                     if (winners == 1 && won == true){
                         System.out.println(winnernames + "has won the race!! ");
                         finished = true;
@@ -142,6 +148,7 @@ public class Race
                     }
                 }
 
+                // Showing that all horses have fallen thus no winner
                 else {
                     System.out.println("All horses have fallen race has ended!! :( ");
                     finished = true;
@@ -149,8 +156,6 @@ public class Race
 
                 //wait for 100 milliseconds
                 try{
-                    //System.out.println("\033[H\033[2J");
-                    //System.out.print('\u000C');  //clear the terminal window
                     TimeUnit.MILLISECONDS.sleep(100);
                 }catch(Exception e){}
 
