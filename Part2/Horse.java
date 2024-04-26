@@ -16,6 +16,7 @@ public class Horse
     private int distance;
     private boolean fallen;
     private double horseConfidence;
+    private String breed;
       
     //Constructor of class Horse
     /**
@@ -25,11 +26,12 @@ public class Horse
      * @param horseName This assigns the name provided by the user to this instance of horse
      * @param horseConfidence This instantiates the horseconfidence attrubute of the current instance of horseSS
      */
-    public Horse(char horseSymbol, String horseName, double horseConfidence){
+    public Horse(char horseSymbol, String horseName, double horseConfidence, String horsebreed){
         this.horseName = horseName;
         this.horseSymbol = horseSymbol;
         this.fallen = false;
         this.distance = 0;
+        this.breed = horsebreed;
         while (horseConfidence<0 || horseConfidence>1){
             input("Error, input was out of bounds \n Enter the horses confidence again, the bound is between 0 to 1");
         }
@@ -56,6 +58,14 @@ public class Horse
     //Other methods of class Horse
     public void fall(){
         this.fallen = true;
+    }
+
+    public void setBreed(String breed){
+        this.breed = breed;
+    }
+
+    public String getBreed (){
+        return this.breed;
     }
 
     public void stand(){
