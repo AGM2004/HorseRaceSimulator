@@ -64,6 +64,10 @@ public class Horse
         this.breed = breed;
     }
 
+    public String getBreed (){
+        return this.breed;
+    }
+
     public void stand(){
         this.fallen = false;
     }
