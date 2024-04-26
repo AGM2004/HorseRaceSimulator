@@ -16,7 +16,7 @@ public class Race
     private HorsePart1[] Horses;
     private int contestents;
 
-    public void main(String args[]){
+    public static void main(String args[]){
         new Race();
     }
 
@@ -65,7 +65,7 @@ public class Race
      * then repeatedly moved forward until the 
      * race is finished
      */
-    public synchronized void startRace()
+    public void startRace()
     {
         // declaring local variables that will be used to take an input from users
         int lane= 1;
