@@ -29,11 +29,10 @@ public class Race
     public Race()
     {
         // initialise instance variables
-        contestents = Integer.valueOf(input("How many contestants are running in the race?"));
-        System.out.println("\n");
+        contestents = Integer.valueOf(input("\n" + "How many contestants are running in the race?"));
         Horses = new HorsePart1[contestents];
         while(raceLength <= 0){
-            raceLength = Integer.valueOf(input("What is the length of the race?"));
+            raceLength = Integer.valueOf(input("\n" + "What is the length of the race?"));
         }
         startRace();
     }
@@ -76,7 +75,7 @@ public class Race
 
         // Loop to take in details of horses to be added to the lanes
         while(lane <= contestents){
-            String horseName = input("What is the name of horse " + lane + " ?");
+            String horseName = input("\n"+"What is the name of horse " + lane + " ?");
             char horseSymbol = input("What is the symbol of horse " + lane + " ?").charAt(0); 
             double horsec = Double.valueOf(rd.nextInt(9) +1)/10.0;
             System.out.println("What is the confidence of horse " + horsec); 
@@ -195,7 +194,9 @@ public class Race
             //so if you double the confidence, the probability that it will fall is *2
             if (Math.random() < (0.1*theHorse.getConfidence()*theHorse.getConfidence()))
             {
-                theHorse.setConfidence(theHorse.getConfidence() - 0.1);
+                if(theHorse.getConfidence() > 0.1){
+                    theHorse.setConfidence(theHorse.getConfidence() - 0.1);
+                }
                 theHorse.fall();
             }
         }
@@ -211,7 +212,9 @@ public class Race
     {
         if (theHorse.getDistanceTravelled() == raceLength)
         {
-            theHorse.setConfidence(theHorse.getConfidence() + 0.1);
+            if(theHorse.getConfidence() < 0.9){
+                theHorse.setConfidence(theHorse.getConfidence() + 0.1);
+            }
             return true;
         }
         else

@@ -758,7 +758,6 @@ public class Race
         for(int i =0; i<times; i++){
             mul += aChar;
         }
-        int i = 0;
         return mul;
     }
 }
