@@ -1,4 +1,4 @@
-﻿# HorseRaceSImulator
+﻿# HorseRaceSimulator
 This project consists of two parts, the main basis behind this project is to create a simulation of a race between multiple horses.
 My application consists of two parts, the first part is a textual version of the horse race and the second part is a virtual version of the same race but with more customisable options.
 
